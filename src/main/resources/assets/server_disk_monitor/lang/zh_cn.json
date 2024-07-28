@@ -1,0 +1,4 @@
+{
+  "commands.diskFreeSpace.result": "当前硬盘剩余空间：%s",
+  "logs.diskMonitor.consoleAlert": "警告！硬盘剩余空间不足，当前剩余空间：%s"
+}
