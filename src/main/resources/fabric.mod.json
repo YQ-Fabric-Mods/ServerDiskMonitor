@@ -1,34 +1,28 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "server_disk_monitor",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "ServerDiskMonitor",
+	"description": "A Fabric mod to monitor and alert server disk usage",
 	"authors": [
-		"Me!"
+		"yqs112358"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/yqs112358/ServerDiskMonitor",
+		"sources": "https://github.com/yqs112358/ServerDiskMonitor"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"icon": "assets/server_disk_monitor/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
+			"com.yqs112358.ServerDiskMonitorMod"
 		],
 		"client": [
-			"com.example.ExampleModClient"
+          "com.yqs112358.ServerDiskMonitorModClient"
 		]
 	},
-	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
-	],
+	"mixins": [],
 	"depends": {
 		"fabricloader": ">=0.15.11",
 		"minecraft": "~1.21",
