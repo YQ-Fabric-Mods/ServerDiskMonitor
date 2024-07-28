@@ -36,6 +36,7 @@ public class DiskMonitor {
     }
 
     public void monitorLoop() {
+        boolean serverStopping = false;
         if(getCurrentFreeSpace() < thresholdInBytes) {
             // alert: not enough free space!
             // execute alert commands
@@ -43,6 +44,8 @@ public class DiskMonitor {
             for(String command : alertCommands){
                 if(command.startsWith("/"))
                     command = command.substring(1);
+                if(command.equals("stop"))
+                    serverStopping = true;
 
                 if(command.startsWith(customDelayCommand))
                 {
@@ -62,6 +65,7 @@ public class DiskMonitor {
             }
         }
         // schedule next check
-        scheduler.addDelayedTask(intervalInTicks, this::monitorLoop);
+        if(!serverStopping)
+            scheduler.addDelayedTask(intervalInTicks, this::monitorLoop);
     }
 }
