@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 @Config(name = "server_disk_monitor")
 class ModConfig implements ConfigData {
-    String spaceAlertThreshold = "500MB";
+    String spaceAlertThreshold = "100MB";
     int monitorInterval = 30;   // seconds
     ArrayList<String> alertCommands = new ArrayList<String>();
 }

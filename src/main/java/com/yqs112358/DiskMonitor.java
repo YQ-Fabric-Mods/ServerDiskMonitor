@@ -51,14 +51,20 @@ public class DiskMonitor {
 
     public void logAlert(long currentFreeSpace) {
         String capacityString = Utils.capacityToReadable(currentFreeSpace);
-        String alertString = Text.translatable("logs.diskMonitor.consoleAlert", capacityString).toString();
+        String alertString = Text.translatable("logs.diskMonitor.consoleAlert", capacityString).getString();
         LOGGER.warn(alertString);
         try {
-            File alertFile = FabricLoader.getInstance().getGameDir().resolve("logs").toFile();
-            BufferedWriter out = new BufferedWriter(new FileWriter(alertFile, true));
+            File logsDir = FabricLoader.getInstance().getGameDir().resolve("logs").toFile();
+            if(!logsDir.exists())
+                logsDir.mkdirs();
+            File alertFile = logsDir.toPath().resolve("ServerDiskMonitor.log").toFile();
+            FileWriter out = new FileWriter(alertFile, true);
             String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
-            out.write("[" + datetime + "] " + alertString);
-        } catch (IOException ignored) {}
+            out.write("[" + datetime + "] " + alertString + "\n");
+            out.close();
+        } catch (IOException exception) {
+            LOGGER.error(exception.toString());
+        }
     }
 
     public void monitorLoop() {
