@@ -12,6 +12,7 @@ import static net.minecraft.server.command.CommandManager.*;
 public final class DiskFreeSpaceCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher){
         dispatcher.register(literal("diskfreespace")
+                .requires(source -> source.hasPermissionLevel(2))
                 .executes(ctx -> getDiskFreeSpace(ctx.getSource())));
     }
 
