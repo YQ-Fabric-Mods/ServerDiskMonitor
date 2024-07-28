@@ -1,0 +1,4 @@
+{
+  "commands.diskFreeSpace.result": "Current disk free space: %s",
+  "logs.diskMonitor.consoleAlert": "Alert! Insufficient disk space. Current disk free space: %s"
+}

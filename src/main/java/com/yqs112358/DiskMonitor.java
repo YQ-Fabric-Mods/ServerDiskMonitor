@@ -4,6 +4,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 import org.slf4j.Logger;
 
 import java.io.BufferedWriter;
@@ -41,19 +42,20 @@ public class DiskMonitor {
         LOGGER.info("Configuration loaded.");
     }
 
-    public long getCurrentDiskFreeSpace() {
+    public static long getCurrentDiskFreeSpace() {
         File rootFile = FabricLoader.getInstance().getConfigDir().getRoot().toFile();
         return rootFile.getTotalSpace() - rootFile.getUsableSpace();
     }
 
     public void logAlert(long currentFreeSpace) {
         String capacityString = Utils.capacityToReadable(currentFreeSpace);
-        LOGGER.info("Alert! Current disk free space: " + capacityString);
+        String alertString = Text.translatable("logs.diskMonitor.consoleAlert", capacityString).toString();
+        LOGGER.warn(alertString);
         try {
             File alertFile = FabricLoader.getInstance().getGameDir().resolve("logs").toFile();
             BufferedWriter out = new BufferedWriter(new FileWriter(alertFile, true));
             String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
-            out.write("[" + datetime + "] Alert! Current disk free space: " + capacityString);
+            out.write("[" + datetime + "] " + alertString);
         } catch (IOException ignored) {}
     }
 
