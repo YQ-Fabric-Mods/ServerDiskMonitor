@@ -21,4 +21,13 @@ public class Utils {
             default -> value; // bad unit
         };
     }
+
+    public static String capacityToReadable(long bytes) {
+        int unit = 1024;
+        if (bytes < unit)
+            return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = ("KMGTP").charAt(exp-1) + "B";
+        return String.format("%.1f %s", bytes / Math.pow(unit, exp), pre);
+    }
 }

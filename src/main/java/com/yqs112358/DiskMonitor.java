@@ -4,11 +4,17 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
+import org.slf4j.Logger;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class DiskMonitor {
+    private final Logger LOGGER;
     private final TaskScheduler scheduler = new TaskScheduler();
     private final String customDelayCommand = "/delay ";
     public MinecraftServer minecraftServer = null;
@@ -16,6 +22,10 @@ public class DiskMonitor {
     private int intervalInTicks;
     private long thresholdInBytes;
     private ArrayList<String> alertCommands;
+
+    public DiskMonitor(Logger logger) {
+        LOGGER = logger;
+    }
 
     public void tick(MinecraftServer server) {
         if(minecraftServer == null)
@@ -28,18 +38,32 @@ public class DiskMonitor {
         intervalInTicks = config.monitorInterval * 20;
         thresholdInBytes = Utils.parseCapacity(config.spaceAlertThreshold);
         alertCommands = config.alertCommands;
+        LOGGER.info("Configuration loaded.");
     }
 
-    public long getCurrentFreeSpace() {
+    public long getCurrentDiskFreeSpace() {
         File rootFile = FabricLoader.getInstance().getConfigDir().getRoot().toFile();
         return rootFile.getTotalSpace() - rootFile.getUsableSpace();
     }
 
+    public void logAlert(long currentFreeSpace) {
+        String capacityString = Utils.capacityToReadable(currentFreeSpace);
+        LOGGER.info("Alert! Current disk free space: " + capacityString);
+        try {
+            File alertFile = FabricLoader.getInstance().getGameDir().resolve("logs").toFile();
+            BufferedWriter out = new BufferedWriter(new FileWriter(alertFile, true));
+            String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+            out.write("[" + datetime + "] Alert! Current disk free space: " + capacityString);
+        } catch (IOException ignored) {}
+    }
+
     public void monitorLoop() {
         boolean serverStopping = false;
-        if(getCurrentFreeSpace() < thresholdInBytes) {
+        long currentFreeSpace = getCurrentDiskFreeSpace();
+        if(currentFreeSpace < thresholdInBytes) {
             // alert: not enough free space!
-            // execute alert commands
+            logAlert(currentFreeSpace);
+            // schedule alert commands
             int currentDelayTicks = 0;
             for(String command : alertCommands){
                 if(command.startsWith("/"))

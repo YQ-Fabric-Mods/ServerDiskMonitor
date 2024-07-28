@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class ServerDiskMonitorMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("ServerDiskMonitor");
-	public static final DiskMonitor monitor = new DiskMonitor();
+	public static final DiskMonitor monitor = new DiskMonitor(LOGGER);
 
 	@Override
 	public void onInitialize() {
