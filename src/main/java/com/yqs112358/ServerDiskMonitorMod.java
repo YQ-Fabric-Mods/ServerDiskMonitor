@@ -21,7 +21,7 @@ public class ServerDiskMonitorMod implements ModInitializer {
 		});
 
 		monitor.loadConfigs();
-		monitor.monitor_loop();
+		monitor.monitorLoop();
 
 		LOGGER.info("ServerDiskMonitor loaded.");
 	}

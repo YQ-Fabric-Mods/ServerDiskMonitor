@@ -35,12 +35,8 @@ public class DiskMonitor {
         return rootFile.getTotalSpace() - rootFile.getUsableSpace();
     }
 
-    public void monitor_loop() {
-        if(getCurrentFreeSpace() > thresholdInBytes) {
-            // normal, schedule next check
-            scheduler.addDelayedTask(intervalInTicks, this::monitor_loop);
-        }
-        else {
+    public void monitorLoop() {
+        if(getCurrentFreeSpace() < thresholdInBytes) {
             // alert: not enough free space!
             // execute alert commands
             int currentDelayTicks = 0;
@@ -65,5 +61,7 @@ public class DiskMonitor {
                 }
             }
         }
+        // schedule next check
+        scheduler.addDelayedTask(intervalInTicks, this::monitorLoop);
     }
 }
