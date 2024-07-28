@@ -11,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -18,7 +19,8 @@ public class DiskMonitor {
     private final Logger LOGGER;
     private final TaskScheduler scheduler = new TaskScheduler();
     private final String customDelayCommand = "/delay ";
-    public MinecraftServer minecraftServer = null;
+    private static File rootDiskFile = null;
+    private static MinecraftServer minecraftServer = null;
     // configs
     private int intervalInTicks;
     private long thresholdInBytes;
@@ -26,6 +28,8 @@ public class DiskMonitor {
 
     public DiskMonitor(Logger logger) {
         LOGGER = logger;
+        Path rootDir = FabricLoader.getInstance().getConfigDir().toAbsolutePath().getRoot();
+        rootDiskFile = rootDir.toFile();
     }
 
     public void tick(MinecraftServer server) {
@@ -43,8 +47,7 @@ public class DiskMonitor {
     }
 
     public static long getCurrentDiskFreeSpace() {
-        File rootFile = FabricLoader.getInstance().getConfigDir().getRoot().toFile();
-        return rootFile.getTotalSpace() - rootFile.getUsableSpace();
+        return rootDiskFile.getTotalSpace() - rootDiskFile.getUsableSpace();
     }
 
     public void logAlert(long currentFreeSpace) {
