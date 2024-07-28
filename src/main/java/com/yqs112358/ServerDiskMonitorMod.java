@@ -13,7 +13,7 @@ import static com.yqs112358.DiskFreeSpaceCommand.register;
 
 public class ServerDiskMonitorMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("ServerDiskMonitor");
-	public static final DiskMonitor monitor = new DiskMonitor(LOGGER);
+	public static final DiskMonitor monitor = new DiskMonitor();
 
 	@Override
 	public void onInitialize() {
